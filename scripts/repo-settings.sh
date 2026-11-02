@@ -19,7 +19,8 @@ gh repo edit "${REPO}" \
   --enable-merge-commit \
   --enable-squash-merge=false \
   --enable-rebase-merge=false \
-  --delete-branch-on-merge
+  --delete-branch-on-merge \
+  --enable-auto-merge
 
 # --- Topics (at most 20) --------------------------------------------------------
 gh api -X PUT "repos/${REPO}/topics" --silent \

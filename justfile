@@ -12,11 +12,15 @@ setup:
     uv sync
     uv run pre-commit install --hook-type pre-commit --hook-type commit-msg
 
-# Lint, check formatting and check import boundaries
-lint:
+# Lint, check formatting, import boundaries and dependency policy
+lint: deps
     uv run ruff check .
     uv run ruff format --check .
     uv run lint-imports
+
+# Check dependency licences and the no-ML policy
+deps:
+    uv run python scripts/check_dependencies.py
 
 # Format code and apply safe lint fixes
 fmt:

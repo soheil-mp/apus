@@ -76,6 +76,12 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
+      - id: dependency-policy
+        name: dependency licences and scope
+        entry: uv run --no-sync python scripts/check_dependencies.py
+        language: system
+        files: ^(uv\.lock|scripts/check_dependencies\.py)$
+        pass_filenames: false
 
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.12

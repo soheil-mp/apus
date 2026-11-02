@@ -1,0 +1,79 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "timezone": "Europe/Amsterdam",
+  "schedule": ["before 6am on monday"],
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  },
+  "pre-commit": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "One pull request for all GitHub Actions updates",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "One pull request for all pre-commit hook updates",
+      "matchManagers": ["pre-commit"],
+      "groupName": "pre-commit hooks"
+    },
+    {
+      "description": "Development tools: group them and merge patch updates automatically once CI passes",
+      "matchPackageNames": [
+        "hypothesis",
+        "import-linter",
+        "mypy",
+        "pre-commit",
+        "pytest",
+        "pytest-cov",
+        "ruff",
+        "uv",
+        "rust-just"
+      ],
+      "groupName": "Python development tools"
+    },
+    {
+      "matchPackageNames": [
+        "hypothesis",
+        "import-linter",
+        "mypy",
+        "pre-commit",
+        "pytest",
+        "pytest-cov",
+        "ruff",
+        "uv",
+        "rust-just"
+      ],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "uv version pinned in CI workflows",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": ["UV_VERSION: \"(?<currentValue>[^\"]+)\""],
+      "depNameTemplate": "uv",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "description": "Tool versions pinned in the devcontainer",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.devcontainer/devcontainer\\.json$/"],
+      "matchStrings": ["pipx install (?<depName>[a-z0-9-]+)==(?<currentValue>[^ \"]+)"],
+      "datasourceTemplate": "pypi"
+    }
+  ]
+}

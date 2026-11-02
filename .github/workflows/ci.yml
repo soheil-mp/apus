@@ -39,6 +39,8 @@ jobs:
         run: uv run --no-sync ruff format --check .
       - name: Import boundaries
         run: uv run --no-sync lint-imports
+      - name: Dependency licences and scope (ADR-0002)
+        run: uv run --no-sync python scripts/check_dependencies.py
 
   typecheck:
     name: Type check (mypy strict)
@@ -113,7 +115,7 @@ jobs:
       - name: Run hooks not covered by the jobs above
         run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
         env:
-          SKIP: ruff-check,ruff-format,mypy,import-linter,conventional-pre-commit
+          SKIP: ruff-check,ruff-format,mypy,import-linter,dependency-policy,conventional-pre-commit
 
   ci-ok:
     name: CI passed

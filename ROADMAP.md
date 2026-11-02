@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 24 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.11, M0.12). **Open:** 825 h. With 15 % contingency, that is about 970 hours:
+**Done:** 26 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.11, M0.12). **Open:** 823 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -136,10 +136,11 @@ released automatically.
 - [x] **M0.6** (5 h) GitHub Actions CI: lint, type check, other hooks and tests (matrix by test
   suite), uv cache, concurrency groups, read-only default permissions, actions pinned by commit
   SHA, coverage in the job summary, and one aggregate `CI passed` check required on `main`.
-- [ ] **M0.7** (2 h) Dependency policy: Renovate (grouped, scheduled, automerge for patch
-  updates of dev tools) and a licence check against the allowlist in
-  [technology landscape §4](docs/research/03-technology-landscape.md#4-licence-policy-for-dependencies),
-  including a deny list for machine-learning frameworks.
+- [x] **M0.7** (2 h) Dependency policy: Renovate (grouped, scheduled, automerge for patch
+  updates of dev tools, custom managers for pinned tool versions) and
+  `scripts/check_dependencies.py`, a licence check against the allowlist in
+  [technology landscape §4](docs/research/03-technology-landscape.md#4-licence-policy-for-dependencies)
+  with a deny list for machine-learning packages, run in CI, pre-commit and `just lint`.
 - [ ] **M0.8** (2 h) Community files: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor
   Covenant 2.1), `SECURITY.md` (private reporting), `CODEOWNERS`, issue forms (bug, feature,
   research spike) and a pull-request template that asks whether an ADR is needed.
