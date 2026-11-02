@@ -230,7 +230,7 @@ These are tracked as research spikes in the roadmap:
   UAV tracking and pose estimation. [arXiv:2405.16867][xiao2024]
 
 Tracking and evaluation methods used later are referenced in
-[03-technology-landscape.md](03-technology-landscape.md#algorithms).
+[03-technology-landscape.md](03-technology-landscape.md#3-algorithms).
 
 [alerstam2007]: https://doi.org/10.1371/journal.pbio.0050197
 [apem]: https://www.apemltd.com/apem-pioneers-the-use-of-lidar-to-record-bird-flight-heights/
