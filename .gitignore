@@ -1,0 +1,76 @@
+# --- Secrets and local configuration -------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.age
+!**/*.sops.*
+.netrc
+
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.python-version.local
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.benchmarks/
+dist/
+build/
+
+# --- Node / web -----------------------------------------------------------
+node_modules/
+.pnpm-store/
+web/dist/
+playwright-report/
+test-results/
+
+# --- Data (never commit data; only tiny synthetic fixtures under tests/) --
+data/
+!data/.gitkeep
+*.laz
+*.las
+*.copc.laz
+*.pcap
+*.parquet
+*.duckdb
+*.duckdb.wal
+*.ducklake
+*.arrow
+!tests/fixtures/**
+
+# --- dbt ------------------------------------------------------------------
+transform/target/
+transform/dbt_packages/
+transform/logs/
+
+# --- Dagster --------------------------------------------------------------
+.dagster/
+dagster_home/
+
+# --- Infrastructure -------------------------------------------------------
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+kubeconfig*
+
+# --- Editors and OS -------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Local assistant files ------------------------------------------------
+CLAUDE.local.md
