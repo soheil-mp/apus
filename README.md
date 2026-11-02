@@ -77,27 +77,22 @@ Details: [architecture](docs/architecture.md).
 
 ## How to run it
 
-The repository currently holds the research, architecture and plan; there is no code to run
-yet. To set up a clone for contributing:
+The workspace, tooling and tests are in place; the product itself is being built milestone by
+milestone. You need Git, [uv](https://docs.astral.sh/uv/) (it fetches Python 3.13 itself) and
+[just](https://just.systems/) (`uv tool install rust-just`).
 
 ```sh
 git clone https://github.com/soheil-mp/apus.git
 cd apus
-pre-commit install --hook-type pre-commit --hook-type commit-msg
-pre-commit run --all-files
+just setup   # install the workspace, dev tools and git hooks
+just check   # lint, import boundaries, strict type check, tests with coverage
+just         # list every recipe
 ```
 
-Requirements: Git and [pre-commit](https://pre-commit.com/). From milestone M1, Python 3.13 with
-[uv](https://docs.astral.sh/uv/), [just](https://just.systems/) and Docker are also needed, and
-these commands will start the stack and run the end-to-end test:
+A devcontainer in `.devcontainer/` provides the same tools for VS Code or GitHub Codespaces.
 
-```sh
-just setup   # install the workspace and hooks (from M0.4)
-just up      # start the local platform with Docker Compose (from M1.4)
-just e2e     # run a seeded scenario end to end and check the results (from M1.9)
-```
-
-This section is updated as each milestone lands.
+Coming with the walking skeleton (M1): `just up` starts the local platform with Docker Compose
+and `just e2e` runs a seeded scenario end to end. Until then those recipes say so and exit.
 
 ## Repository layout
 
@@ -122,7 +117,7 @@ described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
   selection, ten ADRs, the target architecture and the roadmap.
 - **Next:** M0 (engineering foundations), then M1, a thin end-to-end slice from simulated
   packets to an API response.
-- **Ahead:** 834 hours of planned work in 21 milestones, listed with estimates and exit criteria
+- **Ahead:** 832 hours of planned work in 21 milestones, listed with estimates and exit criteria
   in [ROADMAP.md](ROADMAP.md) and mirrored as [GitHub issues](https://github.com/soheil-mp/apus/issues).
 
 ## Data and attribution
