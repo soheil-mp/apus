@@ -1,0 +1,16 @@
+[project]
+name = "apus-ingest"
+version = "0.0.0"
+description = "Stream landing service: from NATS JetStream into the lakehouse."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = "MIT"
+authors = [{ name = "Soheil Mohammadpour" }]
+dependencies = ["apus-core"]
+
+[build-system]
+requires = ["uv_build>=0.11,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.sources]
+apus-core = { workspace = true }

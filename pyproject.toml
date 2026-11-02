@@ -1,0 +1,169 @@
+[project]
+name = "apus"
+version = "0.0.0"
+description = "Lidar-based bird-flight monitoring: deterministic perception on a production-grade data platform."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = "MIT"
+authors = [{ name = "Soheil Mohammadpour" }]
+dependencies = [
+  "apus-api",
+  "apus-core",
+  "apus-edge",
+  "apus-ingest",
+  "apus-pipelines",
+  "apus-sim",
+]
+
+[dependency-groups]
+dev = [
+  "hypothesis>=6.170",
+  "import-linter>=2.15",
+  "mypy>=2.4",
+  "pytest>=9.2",
+  "pytest-cov>=7.1",
+  "ruff>=0.17",
+]
+
+# The workspace root is not a package itself; it ties the members together.
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+apus-api = { workspace = true }
+apus-core = { workspace = true }
+apus-edge = { workspace = true }
+apus-ingest = { workspace = true }
+apus-pipelines = { workspace = true }
+apus-sim = { workspace = true }
+
+# --- Ruff -------------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+src = [
+  "packages/apus-api/src",
+  "packages/apus-core/src",
+  "packages/apus-edge/src",
+  "packages/apus-ingest/src",
+  "packages/apus-pipelines/src",
+  "packages/apus-sim/src",
+  "tests",
+  "scripts",
+]
+
+[tool.ruff.lint]
+select = [
+  "A",    # builtins shadowing
+  "ARG",  # unused arguments
+  "B",    # bugbear
+  "BLE",  # blind except
+  "C4",   # comprehensions
+  "D",    # docstrings
+  "DTZ",  # timezone-aware datetimes
+  "E",    # pycodestyle errors
+  "EM",   # exception messages
+  "ERA",  # commented-out code
+  "F",    # pyflakes
+  "FBT",  # boolean traps
+  "FURB", # refurb
+  "G",    # logging format
+  "I",    # isort
+  "ICN",  # import conventions
+  "LOG",  # logging
+  "N",    # naming
+  "PERF", # performance
+  "PIE",  # misc
+  "PL",   # pylint
+  "PT",   # pytest style
+  "PTH",  # pathlib
+  "RET",  # returns
+  "RSE",  # raise
+  "RUF",  # ruff-specific
+  "S",    # security (bandit)
+  "SIM",  # simplify
+  "T10",  # debugger
+  "TC",   # type-checking imports
+  "TID",  # tidy imports
+  "TRY",  # exception handling
+  "UP",   # pyupgrade
+  "W",    # pycodestyle warnings
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "S101", "PLR2004", "ARG001"]
+"scripts/**" = ["S603", "S607", "T201"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# --- mypy -------------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_unreachable = true
+enable_error_code = ["ignore-without-code", "possibly-undefined", "redundant-expr", "truthy-bool"]
+files = ["packages", "tests", "scripts"]
+explicit_package_bases = true
+mypy_path = [
+  "packages/apus-api/src",
+  "packages/apus-core/src",
+  "packages/apus-edge/src",
+  "packages/apus-ingest/src",
+  "packages/apus-pipelines/src",
+  "packages/apus-sim/src",
+]
+
+# --- pytest and coverage ----------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib", "--strict-markers", "--strict-config", "-ra"]
+xfail_strict = true
+filterwarnings = ["error"]
+markers = [
+  "integration: needs external services such as containers",
+  "e2e: runs end to end through the local stack",
+  "slow: takes more than a few seconds",
+]
+
+[tool.coverage.run]
+branch = true
+source_pkgs = ["apus_api", "apus_core", "apus_edge", "apus_ingest", "apus_pipelines", "apus_sim"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError", "@overload"]
+
+# --- Import boundaries (ADR-0010) -------------------------------------------------------
+[tool.importlinter]
+root_packages = ["apus_api", "apus_core", "apus_edge", "apus_ingest", "apus_pipelines", "apus_sim"]
+
+[[tool.importlinter.contracts]]
+name = "Core is the foundation and depends on no other Apus package"
+type = "forbidden"
+source_modules = ["apus_core"]
+forbidden_modules = ["apus_api", "apus_edge", "apus_ingest", "apus_pipelines", "apus_sim"]
+
+[[tool.importlinter.contracts]]
+name = "Edge runs on the device and never imports the simulator or platform code"
+type = "forbidden"
+source_modules = ["apus_edge"]
+forbidden_modules = ["apus_api", "apus_ingest", "apus_pipelines", "apus_sim"]
+
+[[tool.importlinter.contracts]]
+name = "Platform services do not depend on the simulator"
+type = "forbidden"
+source_modules = ["apus_api", "apus_ingest"]
+forbidden_modules = ["apus_sim"]

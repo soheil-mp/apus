@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 11 h (M0.1, M0.2, M0.11, M0.12). **Open:** 838 h. With 15 % contingency, that is about 970 hours:
+**Done:** 15 h (M0.1, M0.2, M0.3, M0.11, M0.12). **Open:** 834 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -126,7 +126,7 @@ released automatically.
   Conventional Commits.
 - [x] **M0.2** (6 h) Planning: domain research, data sources verified against the live
   services, technology landscape, ten ADRs, architecture and this roadmap.
-- [ ] **M0.3** (4 h) uv workspace with the six packages from
+- [x] **M0.3** (4 h) uv workspace with the six packages from
   [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md); Python 3.13 pin and `uv.lock`; Ruff,
   mypy (strict), pytest and coverage (branch coverage, fail under 85 %) configured.
 - [ ] **M0.4** (2 h) `justfile` (`setup`, `lint`, `fmt`, `typecheck`, `test`, `docs`, `up`,

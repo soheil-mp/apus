@@ -38,10 +38,13 @@ EXIT_RE = re.compile(r"^\*\*Exit criteria:\*\* (.+)$")
 ITEM_RE = re.compile(r"^- \[( |x)\] \*\*(M\d+\.\d+)\*\* \((\d+) h\) (.+)$")
 TITLE_MAX = 90
 SHORT_TITLE = 16  # titles shorter than this get the milestone name appended
+MIN_CUT = 20  # never shorten a long clause to fewer characters than this
 
 
 @dataclass
 class Item:
+    """One roadmap item such as M3.4."""
+
     id: str
     hours: int
     text: str
@@ -50,6 +53,8 @@ class Item:
 
 @dataclass
 class Milestone:
+    """One roadmap milestone with its items."""
+
     id: str
     title: str
     phase: int
@@ -60,10 +65,12 @@ class Milestone:
 
     @property
     def full_title(self) -> str:
+        """Title as used for the GitHub milestone, for example 'M3 · Lidar ...'."""
         return f"{self.id} · {self.title}"
 
     @property
     def anchor(self) -> str:
+        """GitHub's heading anchor for this milestone in ROADMAP.md."""
         slug = re.sub(r"[^\w\- ]", "", self.full_title.lower())
         return slug.replace(" ", "-")
 
@@ -120,7 +127,7 @@ def short_title(item: Item, ms: Milestone | None = None) -> str:
     if len(head) > TITLE_MAX:
         for sep in (" with ", ", "):
             idx = head.find(sep)
-            if 20 <= idx <= TITLE_MAX:
+            if MIN_CUT <= idx <= TITLE_MAX:
                 head = head[:idx]
                 break
         else:
@@ -131,6 +138,7 @@ def short_title(item: Item, ms: Milestone | None = None) -> str:
 
 
 def issue_body(item: Item, ms: Milestone, repo: str) -> str:
+    """Markdown body of the issue for one roadmap item."""
     roadmap_url = f"https://github.com/{repo}/blob/main/ROADMAP.md"
     # Relative links in ROADMAP.md do not resolve inside issues; make them absolute.
     text = re.sub(
@@ -158,7 +166,12 @@ def issue_body(item: Item, ms: Milestone, repo: str) -> str:
     )
 
 
+class GitHubError(RuntimeError):
+    """A `gh api` call failed."""
+
+
 def gh(*args: str, payload: dict[str, object] | None = None) -> object:
+    """Call `gh api` with optional JSON payload and return the decoded response."""
     cmd = ["gh", "api", *args]
     if payload is not None:
         cmd += ["--input", "-"]
@@ -170,8 +183,18 @@ def gh(*args: str, payload: dict[str, object] | None = None) -> object:
         check=False,
     )
     if result.returncode != 0:
-        raise RuntimeError(f"gh {' '.join(args)} failed: {result.stderr.strip()}")
+        msg = f"gh {' '.join(args)} failed: {result.stderr.strip()}"
+        raise GitHubError(msg)
     return json.loads(result.stdout) if result.stdout.strip() else None
+
+
+def gh_object(*args: str, payload: dict[str, object] | None = None) -> dict[str, object]:
+    """Call `gh api` for an endpoint that returns a JSON object."""
+    out = gh(*args, payload=payload)
+    if not isinstance(out, dict):
+        msg = f"expected a JSON object from {args}, got {type(out).__name__}"
+        raise GitHubError(msg)
+    return out
 
 
 def gh_paginated(path: str, per_page: int = 100) -> list[dict[str, object]]:
@@ -181,7 +204,9 @@ def gh_paginated(path: str, per_page: int = 100) -> list[dict[str, object]]:
     page = 1
     while True:
         out = gh(f"{path}{sep}per_page={per_page}&page={page}")
-        assert isinstance(out, list)
+        if not isinstance(out, list):
+            msg = f"expected a JSON list from {path}, got {type(out).__name__}"
+            raise GitHubError(msg)
         entries.extend(out)
         if len(out) < per_page:
             return entries
@@ -189,6 +214,7 @@ def gh_paginated(path: str, per_page: int = 100) -> list[dict[str, object]]:
 
 
 def label_specs(milestones: list[Milestone]) -> dict[str, tuple[str, str]]:
+    """Labels the issues use: name -> (colour, description)."""
     specs = {
         ROADMAP_LABEL: ("0e8a16", "Planned work from ROADMAP.md"),
         "stretch": ("c5def5", "Optional within its milestone"),
@@ -198,103 +224,131 @@ def label_specs(milestones: list[Milestone]) -> dict[str, tuple[str, str]]:
     return specs
 
 
+@dataclass
+class Sync:
+    """Mirror parsed milestones into one repository. Prints every change it makes."""
+
+    repo: str
+    apply: bool
+    update: bool
+    milestones: list[Milestone]
+    gh_milestones: dict[str, int] = field(default_factory=dict)
+    existing: dict[str, dict[str, object]] = field(default_factory=dict)
+    counts: dict[str, int] = field(default_factory=lambda: dict.fromkeys(("+", "~", "x"), 0))
+
+    def load(self) -> None:
+        """Read existing milestones and roadmap issues from GitHub."""
+        self.gh_milestones = {
+            str(m["title"]): int(str(m["number"]))
+            for m in gh_paginated(f"repos/{self.repo}/milestones?state=all")
+        }
+        issues = gh_paginated(f"repos/{self.repo}/issues?state=all&labels={ROADMAP_LABEL}")
+        for issue in issues:
+            if m := re.search(r"<!-- roadmap-id: (M\d+\.\d+) -->", str(issue.get("body") or "")):
+                self.existing[m.group(1)] = issue
+
+    def labels(self) -> None:
+        """Create missing labels."""
+        present = {str(lbl["name"]) for lbl in gh_paginated(f"repos/{self.repo}/labels")}
+        for name, (color, desc) in label_specs(self.milestones).items():
+            if name in present:
+                continue
+            print(f"label     + {name}")
+            if self.apply:
+                payload: dict[str, object] = {"name": name, "color": color, "description": desc}
+                gh(f"repos/{self.repo}/labels", payload=payload)
+
+    def create_milestones(self) -> None:
+        """Create missing milestones."""
+        for ms in self.milestones:
+            if ms.full_title in self.gh_milestones:
+                continue
+            hours = sum(it.hours for it in ms.items)
+            print(f"milestone + {ms.full_title} ({hours} h)")
+            if self.apply:
+                desc = f"{ms.goal} Estimate: {hours} h. Exit: {ms.exit_criteria}".strip()
+                payload: dict[str, object] = {"title": ms.full_title, "description": desc[:1000]}
+                created = gh_object(f"repos/{self.repo}/milestones", payload=payload)
+                self.gh_milestones[ms.full_title] = int(str(created["number"]))
+
+    def close_done(self) -> None:
+        """Close open issues whose items are ticked in the roadmap."""
+        for ms in self.milestones:
+            for item in ms.items:
+                found = self.existing.get(item.id)
+                if not item.done or found is None or found.get("state") != "open":
+                    continue
+                print(f"issue     x {short_title(item, ms)} (ticked in ROADMAP.md)")
+                self.counts["x"] += 1
+                if self.apply:
+                    payload: dict[str, object] = {"state": "closed", "state_reason": "completed"}
+                    gh(
+                        "-X",
+                        "PATCH",
+                        f"repos/{self.repo}/issues/{found['number']}",
+                        payload=payload,
+                    )
+
+    def open_items(self) -> None:
+        """Create issues for open items, and refresh existing ones when asked to."""
+        for ms in self.milestones:
+            for item in (it for it in ms.items if not it.done):
+                title, body = short_title(item, ms), issue_body(item, ms, self.repo)
+                found = self.existing.get(item.id)
+                if found is not None:
+                    if self.update:
+                        self._refresh(found, title, body)
+                    continue
+                print(f"issue     + {title}")
+                self.counts["+"] += 1
+                if self.apply:
+                    labels = [ROADMAP_LABEL, f"phase-{ms.phase}"]
+                    if "stretch" in item.text:
+                        labels.append("stretch")
+                    payload: dict[str, object] = {
+                        "title": title,
+                        "body": body,
+                        "labels": labels,
+                        "milestone": self.gh_milestones[ms.full_title],
+                    }
+                    gh(f"repos/{self.repo}/issues", payload=payload)
+                    time.sleep(CREATE_DELAY_S)
+
+    def _refresh(self, issue: dict[str, object], title: str, body: str) -> None:
+        print(f"issue     ~ {title}")
+        self.counts["~"] += 1
+        if self.apply:
+            payload: dict[str, object] = {"title": title, "body": body}
+            gh("-X", "PATCH", f"repos/{self.repo}/issues/{issue['number']}", payload=payload)
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    """Parse the roadmap and mirror it into GitHub (dry run unless --apply)."""
+    parser = argparse.ArgumentParser(description=(__doc__ or "").splitlines()[0])
     parser.add_argument("--repo", default=DEFAULT_REPO)
     parser.add_argument("--apply", action="store_true", help="make changes (default: dry run)")
     parser.add_argument("--update", action="store_true", help="refresh bodies of existing issues")
     args = parser.parse_args()
-    repo: str = args.repo
 
     milestones = parse_roadmap(ROADMAP.read_text(encoding="utf-8"))
-    open_items = [(ms, it) for ms in milestones for it in ms.items if not it.done]
+    open_count = sum(1 for ms in milestones for it in ms.items if not it.done)
+    open_hours = sum(it.hours for ms in milestones for it in ms.items if not it.done)
+    total = sum(len(ms.items) for ms in milestones)
     print(
-        f"Parsed {len(milestones)} milestones, {sum(len(m.items) for m in milestones)} items, "
-        f"{len(open_items)} open ({sum(it.hours for _, it in open_items)} h)."
+        f"Parsed {len(milestones)} milestones, {total} items, {open_count} open ({open_hours} h)."
     )
 
-    labels = {str(lbl["name"]) for lbl in gh_paginated(f"repos/{repo}/labels")}
-    gh_milestones = {
-        str(m["title"]): int(str(m["number"]))
-        for m in gh_paginated(f"repos/{repo}/milestones?state=all")
-    }
-    existing: dict[str, dict[str, object]] = {}
-    for issue in gh_paginated(f"repos/{repo}/issues?state=all&labels={ROADMAP_LABEL}"):
-        if m := re.search(r"<!-- roadmap-id: (M\d+\.\d+) -->", str(issue.get("body") or "")):
-            existing[m.group(1)] = issue
-
-    for name, (color, desc) in label_specs(milestones).items():
-        if name not in labels:
-            print(f"label     + {name}")
-            if args.apply:
-                gh(
-                    f"repos/{repo}/labels",
-                    payload={"name": name, "color": color, "description": desc},
-                )
-
-    for ms in milestones:
-        if ms.full_title not in gh_milestones:
-            hours = sum(it.hours for it in ms.items)
-            print(f"milestone + {ms.full_title} ({hours} h)")
-            if args.apply:
-                desc = f"{ms.goal} Estimate: {hours} h. Exit: {ms.exit_criteria}".strip()
-                created = gh(
-                    f"repos/{repo}/milestones",
-                    payload={"title": ms.full_title, "description": desc[:1000]},
-                )
-                assert isinstance(created, dict)
-                gh_milestones[ms.full_title] = int(created["number"])
-
-    created_count = updated_count = closed_count = 0
-    for ms in milestones:
-        for item in ms.items:
-            found = existing.get(item.id)
-            if item.done and found is not None and found.get("state") == "open":
-                print(f"issue     x {short_title(item, ms)} (ticked in ROADMAP.md)")
-                closed_count += 1
-                if args.apply:
-                    gh(
-                        "-X",
-                        "PATCH",
-                        f"repos/{repo}/issues/{found['number']}",
-                        payload={"state": "closed", "state_reason": "completed"},
-                    )
-
-    for ms, item in open_items:
-        title, body = short_title(item, ms), issue_body(item, ms, repo)
-        issue_labels = [ROADMAP_LABEL, f"phase-{ms.phase}"] + (
-            ["stretch"] if "stretch" in item.text else []
-        )
-        if item.id in existing:
-            if args.update:
-                print(f"issue     ~ {title}")
-                updated_count += 1
-                if args.apply:
-                    gh(
-                        "-X",
-                        "PATCH",
-                        f"repos/{repo}/issues/{existing[item.id]['number']}",
-                        payload={"title": title, "body": body},
-                    )
-            continue
-        print(f"issue     + {title}")
-        created_count += 1
-        if args.apply:
-            gh(
-                f"repos/{repo}/issues",
-                payload={
-                    "title": title,
-                    "body": body,
-                    "labels": issue_labels,
-                    "milestone": gh_milestones[ms.full_title],
-                },
-            )
-            time.sleep(CREATE_DELAY_S)
+    sync = Sync(repo=args.repo, apply=args.apply, update=args.update, milestones=milestones)
+    sync.load()
+    sync.labels()
+    sync.create_milestones()
+    sync.close_done()
+    sync.open_items()
 
     verb = "Applied" if args.apply else "Dry run, would apply"
     print(
-        f"{verb}: {created_count} created, {updated_count} updated, {closed_count} closed; "
-        f"{len(existing)} roadmap issues existed before this run."
+        f"{verb}: {sync.counts['+']} created, {sync.counts['~']} updated, "
+        f"{sync.counts['x']} closed; {len(sync.existing)} roadmap issues existed before this run."
     )
     return 0
 

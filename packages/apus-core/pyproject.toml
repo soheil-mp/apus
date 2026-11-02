@@ -1,0 +1,13 @@
+[project]
+name = "apus-core"
+version = "0.0.0"
+description = "Domain types, coordinate frames, units and configuration shared by every Apus package."
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+license = "MIT"
+authors = [{ name = "Soheil Mohammadpour" }]
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.11,<0.14"]
+build-backend = "uv_build"
