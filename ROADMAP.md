@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 19 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.11, M0.12). **Open:** 830 h. With 15 % contingency, that is about 970 hours:
+**Done:** 24 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.11, M0.12). **Open:** 825 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -133,9 +133,9 @@ released automatically.
   `down`, `e2e`) and a devcontainer with the same tool versions.
 - [x] **M0.5** (2 h) Extend pre-commit with Ruff, mypy, actionlint, hadolint, ShellCheck,
   yamllint, check-jsonschema and import-linter.
-- [ ] **M0.6** (5 h) GitHub Actions CI: lint, type check and test (matrix by package), uv
-  cache, concurrency groups, read-only default permissions, actions pinned by commit SHA,
-  coverage in the job summary.
+- [x] **M0.6** (5 h) GitHub Actions CI: lint, type check, other hooks and tests (matrix by test
+  suite), uv cache, concurrency groups, read-only default permissions, actions pinned by commit
+  SHA, coverage in the job summary, and one aggregate `CI passed` check required on `main`.
 - [ ] **M0.7** (2 h) Dependency policy: Renovate (grouped, scheduled, automerge for patch
   updates of dev tools) and a licence check against the allowlist in
   [technology landscape §4](docs/research/03-technology-landscape.md#4-licence-policy-for-dependencies),
@@ -149,8 +149,8 @@ released automatically.
   included, Mermaid enabled, deployed to GitHub Pages, link checking in CI.
 - [x] **M0.11** (1 h) Repository settings as code (`scripts/repo-settings.sh`): description,
   topics, merge-commit-only merging, secret scanning with push protection, vulnerability alerts,
-  and a `main` ruleset (no force-push, no deletion). Required pull requests and status checks
-  are added to the ruleset in M0.6.
+  and `main` rulesets (no force-push or deletion for anyone; pull requests passing CI, which
+  admins may bypass).
 - [x] **M0.12** (2 h) Idempotent script (`scripts/sync_roadmap_issues.py`) that creates GitHub
   milestones, labels and one issue per open roadmap item, and closes issues whose items are
   ticked here.

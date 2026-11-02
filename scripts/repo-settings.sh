@@ -6,7 +6,6 @@
 set -euo pipefail
 
 REPO="${1:-soheil-mp/apus}"
-RULESET_NAME="protect-main"
 
 echo "Applying settings to ${REPO}"
 
@@ -37,12 +36,24 @@ gh api -X PATCH "repos/${REPO}" --silent \
   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
 gh api -X PUT "repos/${REPO}/vulnerability-alerts" --silent
 
-# --- Ruleset for the default branch ---------------------------------------------
+# --- Rulesets for the default branch ---------------------------------------------
+# apply_ruleset NAME JSON: create the ruleset, or update it in place if it exists.
+apply_ruleset() {
+  local name="$1" json="$2" id
+  id=$(gh api "repos/${REPO}/rulesets" --jq ".[] | select(.name == \"${name}\") | .id")
+  if [[ -n "${id}" ]]; then
+    gh api -X PUT "repos/${REPO}/rulesets/${id}" --silent --input - <<<"${json}"
+    echo "Updated ruleset ${name} (${id})"
+  else
+    gh api -X POST "repos/${REPO}/rulesets" --silent --input - <<<"${json}"
+    echo "Created ruleset ${name}"
+  fi
+}
+
 # Published history is never rewritten: no force-pushes and no deletion of main.
-# Required pull requests and status checks are added in M0.6 once CI exists.
-ruleset_json=$(cat <<JSON
-{
-  "name": "${RULESET_NAME}",
+# Nobody can bypass this ruleset.
+apply_ruleset "protect-main" '{
+  "name": "protect-main",
   "target": "branch",
   "enforcement": "active",
   "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
@@ -50,17 +61,39 @@ ruleset_json=$(cat <<JSON
     { "type": "non_fast_forward" },
     { "type": "deletion" }
   ]
-}
-JSON
-)
+}'
 
-existing_id=$(gh api "repos/${REPO}/rulesets" --jq ".[] | select(.name == \"${RULESET_NAME}\") | .id")
-if [[ -n "${existing_id}" ]]; then
-  gh api -X PUT "repos/${REPO}/rulesets/${existing_id}" --silent --input - <<<"${ruleset_json}"
-  echo "Updated ruleset ${RULESET_NAME} (${existing_id})"
-else
-  gh api -X POST "repos/${REPO}/rulesets" --silent --input - <<<"${ruleset_json}"
-  echo "Created ruleset ${RULESET_NAME}"
-fi
+# Changes reach main through pull requests that pass CI ("CI passed" aggregates every
+# job) and are merged with a merge commit. Repository admins may bypass, so the sole
+# maintainer can still push small changes directly.
+apply_ruleset "require-ci" '{
+  "name": "require-ci",
+  "target": "branch",
+  "enforcement": "active",
+  "bypass_actors": [
+    { "actor_id": 5, "actor_type": "RepositoryRole", "bypass_mode": "always" }
+  ],
+  "conditions": { "ref_name": { "include": ["~DEFAULT_BRANCH"], "exclude": [] } },
+  "rules": [
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": true,
+        "allowed_merge_methods": ["merge"]
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": false,
+        "required_status_checks": [{ "context": "CI passed", "integration_id": 15368 }]
+      }
+    }
+  ]
+}'
 
 echo "Done."
