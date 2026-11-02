@@ -1,7 +1,8 @@
 # Roadmap
 
 > **Status (2026-11-02):** planning is complete: research, architecture and the first ten ADRs
-> are in [`docs/`](docs/). No product code exists yet. The next item is **M0.3**.
+> are in [`docs/`](docs/), and every open item is mirrored as a GitHub issue. No product code
+> exists yet. The next item is **M0.3**.
 
 Apus is built in seven phases and 21 milestones. A thin end-to-end slice comes first (M1), and
 every later milestone deepens one stage of that slice, so the project works from early on and
@@ -9,8 +10,8 @@ gets better with each step.
 
 ## How to read this roadmap
 
-- **IDs** are `M<milestone>.<item>`. Each item becomes one GitHub issue (M0.12); this file stays
-  the source of truth.
+- **IDs** are `M<milestone>.<item>`. Each open item has one GitHub issue, created and closed by
+  `scripts/sync_roadmap_issues.py`; this file stays the source of truth.
 - **Estimates** are hours of focused work, including tests and documentation for that item.
 - **`[x]`** marks items merged to `main`. Exit criteria must hold before a milestone closes.
 - Items marked *stretch* are optional within their milestone.
@@ -46,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 8 h (M0.1, M0.2). **Open:** 841 h. With 15 % contingency, that is about 970 hours:
+**Done:** 11 h (M0.1, M0.2, M0.11, M0.12). **Open:** 838 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -146,11 +147,13 @@ released automatically.
   tags `vX.Y.Z`, and `CITATION.cff`.
 - [ ] **M0.10** (3 h) Documentation site with Zensical: Diátaxis structure, research and ADRs
   included, Mermaid enabled, deployed to GitHub Pages, link checking in CI.
-- [ ] **M0.11** (1 h) Repository settings as code: a `gh api` script for the `main` ruleset
-  (pull request required, required checks, no force-push, no deletion) and for secret scanning
-  with push protection.
-- [ ] **M0.12** (2 h) Idempotent script that creates GitHub milestones, labels and one issue
-  per roadmap item.
+- [x] **M0.11** (1 h) Repository settings as code (`scripts/repo-settings.sh`): description,
+  topics, merge-commit-only merging, secret scanning with push protection, vulnerability alerts,
+  and a `main` ruleset (no force-push, no deletion). Required pull requests and status checks
+  are added to the ruleset in M0.6.
+- [x] **M0.12** (2 h) Idempotent script (`scripts/sync_roadmap_issues.py`) that creates GitHub
+  milestones, labels and one issue per open roadmap item, and closes issues whose items are
+  ticked here.
 
 **Exit criteria:** CI is green on `main`; the docs site is live; `just setup && just test`
 works on a fresh clone.
