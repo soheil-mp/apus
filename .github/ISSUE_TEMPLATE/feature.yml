@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest new behaviour or an improvement.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What are you trying to do, and what stops you today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should Apus do? Mention the roadmap item if one is related.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: The proposal uses no machine learning or model APIs (ADR-0002).
+          required: true
+        - label: The proposal processes no personal data.
+          required: true

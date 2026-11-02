@@ -1,0 +1,51 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please do not include secrets or personal data. For security
+        problems, use the Security tab instead (see SECURITY.md).
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Commands, scenario files or seeds that reproduce the problem.
+      placeholder: |
+        1. just setup
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0 or a commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Simulator
+        - Edge (detection, tracking, publishing)
+        - Data platform (ingestion, lakehouse, orchestration, dbt)
+        - API or web viewer
+        - Deployment or CI
+        - Documentation
+    validations:
+      required: true

@@ -1,0 +1,32 @@
+name: Research spike
+description: A time-boxed investigation that ends in a written recommendation.
+labels: [spike]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: The one question this spike must answer.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Why the answer matters, related roadmap items, ADRs and sources.
+    validations:
+      required: true
+  - type: input
+    id: timebox
+    attributes:
+      label: Time box (hours)
+      placeholder: "4"
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Expected output
+      description: For example an ADR, a benchmark report or a short note in docs/research.
+    validations:
+      required: true

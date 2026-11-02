@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 26 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.11, M0.12). **Open:** 823 h. With 15 % contingency, that is about 970 hours:
+**Done:** 28 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.11, M0.12). **Open:** 821 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -141,7 +141,7 @@ released automatically.
   `scripts/check_dependencies.py`, a licence check against the allowlist in
   [technology landscape §4](docs/research/03-technology-landscape.md#4-licence-policy-for-dependencies)
   with a deny list for machine-learning packages, run in CI, pre-commit and `just lint`.
-- [ ] **M0.8** (2 h) Community files: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor
+- [x] **M0.8** (2 h) Community files: `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md` (Contributor
   Covenant 2.1), `SECURITY.md` (private reporting), `CODEOWNERS`, issue forms (bug, feature,
   research spike) and a pull-request template that asks whether an ADR is needed.
 - [ ] **M0.9** (2 h) Release automation with release-please (manifest mode), `CHANGELOG.md`,

@@ -19,8 +19,17 @@ gh repo edit "${REPO}" \
   --enable-merge-commit \
   --enable-squash-merge=false \
   --enable-rebase-merge=false \
-  --delete-branch-on-merge \
-  --enable-auto-merge
+  --delete-branch-on-merge
+
+# Auto-merge lets Renovate merge dev-tool patch updates once CI passes. Set through the
+# REST API because `gh repo edit --enable-auto-merge` does not apply it on older gh versions.
+gh api -X PATCH "repos/${REPO}" --silent -F allow_auto_merge=true
+
+# --- Labels used by issue forms and Renovate ---------------------------------------
+gh label create spike --repo "${REPO}" --force --color "5319e7" \
+  --description "Time-boxed investigation ending in a recommendation"
+gh label create dependencies --repo "${REPO}" --force --color "0366d6" \
+  --description "Dependency updates"
 
 # --- Topics (at most 20) --------------------------------------------------------
 gh api -X PUT "repos/${REPO}/topics" --silent \
@@ -36,6 +45,8 @@ gh api -X PATCH "repos/${REPO}" --silent \
   -f 'security_and_analysis[secret_scanning][status]=enabled' \
   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
 gh api -X PUT "repos/${REPO}/vulnerability-alerts" --silent
+# Private vulnerability reporting backs the process in SECURITY.md.
+gh api -X PUT "repos/${REPO}/private-vulnerability-reporting" --silent
 
 # --- Rulesets for the default branch ---------------------------------------------
 # apply_ruleset NAME JSON: create the ruleset, or update it in place if it exists.
