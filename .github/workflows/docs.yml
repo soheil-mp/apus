@@ -1,0 +1,108 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "*.md"
+      - zensical.toml
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/docs.yml
+  pull_request:
+    paths:
+      - "docs/**"
+      - "*.md"
+      - zensical.toml
+      - pyproject.toml
+      - uv.lock
+      - .github/workflows/docs.yml
+  schedule:
+    - cron: "17 5 * * 1" # Mondays: check external links
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: "1"
+  UV_VERSION: "0.13.6"
+
+jobs:
+  build:
+    name: Build site (strict)
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+      - name: Install the docs tooling
+        run: uv sync --locked --only-group docs
+      - name: Build
+        run: uv run --no-sync zensical build --strict --clean
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  links:
+    name: Internal links and anchors
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --offline --include-fragments --no-progress
+            --exclude-path .venv --exclude-path site
+            './**/*.md'
+          fail: true
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [build, links]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  external-links:
+    name: External links (weekly)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Publishers often answer automated requests with 403 or 429; those are not broken links.
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --no-progress --max-retries 3
+            --accept '200..=299,403,429'
+            --exclude-path .venv --exclude-path site
+            './**/*.md'
+          fail: true

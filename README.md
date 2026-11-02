@@ -4,8 +4,9 @@
 deterministic, explainable methods, then runs them through a production-grade data platform:
 edge streaming, a lakehouse, orchestration, data contracts, quality checks and dashboards.
 
-> **Status:** planning is complete and implementation is starting. Research, architecture and
-> decisions are in [`docs/`](docs/); the work ahead is in [ROADMAP.md](ROADMAP.md).
+> **Status:** the engineering foundations are in place and the product is being built milestone
+> by milestone. Documentation: **<https://soheil-mp.github.io/apus/>**. The work ahead is in
+> [ROADMAP.md](ROADMAP.md) and the [issues](https://github.com/soheil-mp/apus/issues).
 
 *Apus* is the genus of the swifts, birds that spend almost their entire lives in the air. It is
 also a constellation of the southern sky.
@@ -117,7 +118,7 @@ described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
   selection, ten ADRs, the target architecture and the roadmap.
 - **Next:** M0 (engineering foundations), then M1, a thin end-to-end slice from simulated
   packets to an API response.
-- **Ahead:** 819 hours of planned work in 21 milestones, listed with estimates and exit criteria
+- **Ahead:** 816 hours of planned work in 21 milestones, listed with estimates and exit criteria
   in [ROADMAP.md](ROADMAP.md) and mirrored as [GitHub issues](https://github.com/soheil-mp/apus/issues).
 
 ## Data and attribution

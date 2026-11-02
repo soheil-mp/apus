@@ -1,0 +1,107 @@
+[project]
+site_name = "Apus"
+site_description = "Lidar-based bird-flight monitoring: deterministic perception on a production-grade data platform."
+site_author = "Soheil Mohammadpour"
+site_url = "https://soheil-mp.github.io/apus/"
+copyright = "Copyright &copy; 2026 Soheil Mohammadpour. MIT licence."
+repo_url = "https://github.com/soheil-mp/apus"
+repo_name = "soheil-mp/apus"
+edit_uri = "edit/main/docs/"
+docs_dir = "docs"
+site_dir = "site"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Tutorials" = [
+    { "Set up a development environment" = "tutorials/development-setup.md" },
+  ] },
+  { "How-to guides" = [
+    { "Add a dependency" = "how-to/add-a-dependency.md" },
+    { "Sync the roadmap to issues" = "how-to/sync-roadmap-issues.md" },
+    { "Apply the repository settings" = "how-to/apply-repository-settings.md" },
+  ] },
+  { "Reference" = [
+    { "Commands" = "reference/commands.md" },
+    { "Environment variables" = "reference/environment.md" },
+  ] },
+  { "Explanation" = [
+    { "Architecture" = "architecture.md" },
+    { "Research: domain" = "research/01-domain.md" },
+    { "Research: data sources" = "research/02-data-sources.md" },
+    { "Research: technology" = "research/03-technology-landscape.md" },
+    { "Decision records" = [
+      { "Overview" = "adr/README.md" },
+      { "0001 Record decisions" = "adr/0001-record-architecture-decisions.md" },
+      { "0002 Deterministic perception" = "adr/0002-deterministic-explainable-perception.md" },
+      { "0003 Radar-driven synthetic lidar" = "adr/0003-radar-driven-synthetic-lidar.md" },
+      { "0004 Edge-first data reduction" = "adr/0004-edge-first-data-reduction.md" },
+      { "0005 NATS JetStream transport" = "adr/0005-edge-transport-nats-jetstream.md" },
+      { "0006 DuckLake lakehouse" = "adr/0006-lakehouse-ducklake.md" },
+      { "0007 Dagster orchestration" = "adr/0007-orchestration-dagster.md" },
+      { "0008 dbt transformations" = "adr/0008-transformations-dbt.md" },
+      { "0009 Schemas and contracts" = "adr/0009-schemas-and-data-contracts.md" },
+      { "0010 Python toolchain" = "adr/0010-python-toolchain-monorepo.md" },
+    ] },
+  ] },
+  { "Roadmap" = "https://github.com/soheil-mp/apus/blob/main/ROADMAP.md" },
+]
+
+[project.theme]
+language = "en"
+features = [
+  "content.action.edit",
+  "content.action.view",
+  "content.code.copy",
+  "content.tooltips",
+  "navigation.footer",
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.path",
+  "navigation.sections",
+  "navigation.top",
+  "navigation.tracking",
+  "search.highlight",
+  "toc.follow",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/soheil-mp/apus"
+
+[project.markdown_extensions]
+abbr = {}
+admonition = {}
+attr_list = {}
+def_list = {}
+footnotes = {}
+md_in_html = {}
+tables = {}
+toc.permalink = true
+pymdownx.details = {}
+pymdownx.highlight.anchor_linenums = true
+pymdownx.highlight.pygments_lang_class = true
+pymdownx.inlinehilite = {}
+pymdownx.keys = {}
+pymdownx.magiclink = {}
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
+pymdownx.tabbed.alternate_style = true
+pymdownx.tasklist.custom_checkbox = true

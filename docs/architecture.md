@@ -1,7 +1,7 @@
 # Architecture
 
 > Target architecture for Apus 1.0. Components are built milestone by milestone as described in
-> [ROADMAP.md](../ROADMAP.md); decisions are recorded in [docs/adr](adr/README.md).
+> [ROADMAP.md](https://github.com/soheil-mp/apus/blob/main/ROADMAP.md); decisions are recorded in [docs/adr](adr/README.md).
 
 ## 1. System context
 

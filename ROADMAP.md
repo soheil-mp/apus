@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 30 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.11, M0.12). **Open:** 819 h. With 15 % contingency, that is about 970 hours:
+**Done:** 33 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12). **Open:** 816 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -147,7 +147,7 @@ released automatically.
 - [x] **M0.9** (2 h) Release automation with release-please (manifest mode), `CHANGELOG.md`,
   tags `vX.Y.Z`, and `CITATION.cff`; versions of every package bumped together. The release
   pull request for v0.1.0 stays open until M1's exit criteria hold.
-- [ ] **M0.10** (3 h) Documentation site with Zensical: Diátaxis structure, research and ADRs
+- [x] **M0.10** (3 h) Documentation site with Zensical: Diátaxis structure, research and ADRs
   included, Mermaid enabled, deployed to GitHub Pages, link checking in CI.
 - [x] **M0.11** (1 h) Repository settings as code (`scripts/repo-settings.sh`): description,
   topics, merge-commit-only merging, secret scanning with push protection, vulnerability alerts,

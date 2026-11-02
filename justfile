@@ -42,6 +42,14 @@ hooks:
 # Everything CI checks, in the same order
 check: lint typecheck test
 
+# Serve the documentation site locally with live reload
+docs:
+    uv run --group docs zensical serve
+
+# Build the documentation site in strict mode into site/
+docs-build:
+    uv run --group docs zensical build --strict --clean
+
 # Start the local platform with Docker Compose
 up:
     @echo "Not available yet: the Compose stack arrives in roadmap item M1.4." >&2
@@ -67,5 +75,5 @@ repo-settings:
 
 # Remove caches and build output
 clean:
-    rm -rf .mypy_cache .pytest_cache .ruff_cache .hypothesis .coverage coverage.xml htmlcov dist build
+    rm -rf .mypy_cache .pytest_cache .ruff_cache .hypothesis .coverage coverage.xml htmlcov dist build site .cache
     find . -type d -name __pycache__ -not -path "./.venv/*" -prune -exec rm -rf {} +

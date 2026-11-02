@@ -57,7 +57,7 @@ Target budget: **≤ 50 MB per site-day** (a > 99.99 % reduction), enforced by a
 - **Size and latency (observed):** daily files for `nlhrw` are ≈ 1.8–2.0 MB. The file for a
   given day is written about **three days later** (for example, the 2026-01-01 file was last
   modified on 2026-01-04). The ingestion pipeline must treat data as late-arriving and
-  idempotent (see [ROADMAP M9–M10](../../ROADMAP.md)).
+  idempotent (see [ROADMAP M9–M10](https://github.com/soheil-mp/apus/blob/main/ROADMAP.md)).
 - **Schema (header of a live file):** `radar, datetime, height, u, v, w, ff, dd, sd_vvp, gap,
   eta, dens, dbz, dbz_all, n, n_dbz, n_all, n_dbz_all, rcs, sd_vvp_threshold, vcp,
   radar_latitude, radar_longitude, radar_height, radar_wavelength, source_file`. The formal
@@ -125,7 +125,7 @@ These rules keep storage small while the pipeline stays realistic:
 2. **Reduce at the edge.** Raw lidar never leaves the device except as event snippets.
 3. **Columnar and compressed.** Parquet with zstd everywhere downstream; LAZ for point snippets.
 4. **Budgets as tests.** Each dataset has a byte budget in its data contract; a scheduled check
-   fails when a budget is exceeded (see [ROADMAP M12](../../ROADMAP.md)).
+   fails when a budget is exceeded (see [ROADMAP M12](https://github.com/soheil-mp/apus/blob/main/ROADMAP.md)).
 5. **Lifecycle rules.** Bronze objects expire after a set number of days in local development;
    only gold tables and a small public sample are kept long term.
 6. **No data in Git.** Data directories are ignored. Tests use tiny synthetic fixtures generated

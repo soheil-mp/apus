@@ -25,6 +25,7 @@ htmlcov/
 .benchmarks/
 dist/
 build/
+site/
 
 # --- Node / web -----------------------------------------------------------
 node_modules/
