@@ -117,7 +117,7 @@ described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
   selection, ten ADRs, the target architecture and the roadmap.
 - **Next:** M0 (engineering foundations), then M1, a thin end-to-end slice from simulated
   packets to an API response.
-- **Ahead:** 821 hours of planned work in 21 milestones, listed with estimates and exit criteria
+- **Ahead:** 819 hours of planned work in 21 milestones, listed with estimates and exit criteria
   in [ROADMAP.md](ROADMAP.md) and mirrored as [GitHub issues](https://github.com/soheil-mp/apus/issues).
 
 ## Data and attribution

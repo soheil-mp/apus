@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: If you use Apus, please cite it using the metadata below.
+type: software
+title: "Apus: lidar-based bird-flight monitoring"
+abstract: >-
+  Apus turns raw lidar returns into bird tracks with deterministic, explainable methods
+  (background modelling, connected components, IMM-Kalman tracking and explicit rules) and runs
+  them through a data platform that produces detectability-corrected passage rates,
+  flight-height distributions, weather-radar comparisons and collision-risk estimates.
+authors:
+  - family-names: Mohammadpour
+    given-names: Soheil
+repository-code: https://github.com/soheil-mp/apus
+license: MIT
+version: 0.0.0
+keywords:
+  - lidar
+  - point cloud
+  - ornithology
+  - bird migration
+  - multi-target tracking
+  - collision risk
+  - data engineering

@@ -108,3 +108,16 @@ repos:
     hooks:
       - id: check-github-workflows
       - id: check-renovate
+      - id: check-jsonschema
+        name: validate release-please config
+        files: ^release-please-config\.json$
+        args: ["--schemafile", "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"]
+
+  - repo: local
+    hooks:
+      - id: validate-cff
+        name: validate CITATION.cff
+        entry: cffconvert --validate -i
+        language: python
+        additional_dependencies: ["cffconvert==2.0.0"]
+        files: ^CITATION\.cff$
