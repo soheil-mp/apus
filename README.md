@@ -102,6 +102,7 @@ packages/       Python workspace members (uv): apus-core, apus-sim, apus-edge,
                 apus-ingest, apus-pipelines, apus-api
 tests/          unit, integration and end-to-end tests for all packages
 scripts/        repository tooling (GitHub settings, roadmap-to-issues sync)
+proto/          Protobuf message schemas, checked with Buf
 docs/
   research/     domain research, data sources, technology landscape
   adr/          architecture decision records
@@ -109,7 +110,7 @@ docs/
 ROADMAP.md      milestones, estimates, targets and risks
 ```
 
-Directories still to come (dbt project, schemas, contracts, web viewer, deployment) are
+Directories still to come (dbt project, data contracts, web viewer, deployment) are
 described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
 
 ## Status and plans
@@ -118,7 +119,7 @@ described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
   selection, ten ADRs, the target architecture and the roadmap.
 - **Next:** M0 (engineering foundations), then M1, a thin end-to-end slice from simulated
   packets to an API response.
-- **Ahead:** 816 hours of planned work in 21 milestones, listed with estimates and exit criteria
+- **Ahead:** 813 hours of planned work in 21 milestones, listed with estimates and exit criteria
   in [ROADMAP.md](ROADMAP.md) and mirrored as [GitHub issues](https://github.com/soheil-mp/apus/issues).
 
 ## Data and attribution

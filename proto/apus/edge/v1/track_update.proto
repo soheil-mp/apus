@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package apus.edge.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// TrackUpdate is one state estimate of a tracked aerial target, published by an edge device
+// on the subject `apus.{site}.{device}.tracks.v1` (ADR-0005).
+//
+// Positions and velocities are in the site's local East-North-Up frame, whose origin is the
+// site reference point in the site configuration. Units are SI and appear in field names.
+message TrackUpdate {
+  // Site that produced the update, for example "demo-site".
+  string site_id = 1;
+  // Edge device within the site.
+  string device_id = 2;
+  // Identifier that stays the same for the whole life of the track (a UUID).
+  string track_id = 3;
+  // Per-device counter that increases by one with every published message. Together with
+  // device_id it identifies a message, which lets consumers drop duplicates.
+  uint64 sequence = 4;
+  // Time of the measurements this estimate is based on (device clock, UTC).
+  google.protobuf.Timestamp observed_at = 5;
+  // Lifecycle state of the track.
+  TrackStatus status = 6;
+  // Estimated position, metres east, north and up from the site origin.
+  EnuVector position_m = 7;
+  // Estimated velocity in metres per second.
+  EnuVector velocity_mps = 8;
+  // Position covariance, 3x3 row-major, in square metres (9 values).
+  repeated double position_covariance_m2 = 9;
+  // Number of lidar returns associated with the target in this update.
+  uint32 point_count = 10;
+  // Track quality between 0 (poor) and 1 (excellent).
+  double quality = 11;
+}
+
+// EnuVector is a vector in the site's local East-North-Up frame.
+message EnuVector {
+  double east = 1;
+  double north = 2;
+  double up = 3;
+}
+
+// TrackStatus is the lifecycle state of a track (ROADMAP M6.4).
+enum TrackStatus {
+  TRACK_STATUS_UNSPECIFIED = 0;
+  // Seen, but not yet confirmed by the M-of-N rule.
+  TRACK_STATUS_TENTATIVE = 1;
+  // Confirmed and currently associated with measurements.
+  TRACK_STATUS_CONFIRMED = 2;
+  // Confirmed, but predicted forward without new measurements.
+  TRACK_STATUS_COASTING = 3;
+  // Ended; no further updates follow for this track_id.
+  TRACK_STATUS_LOST = 4;
+}

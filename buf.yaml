@@ -1,0 +1,10 @@
+# Buf configuration for the Protobuf schemas in proto/ (ADR-0009).
+version: v2
+modules:
+  - path: proto
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE

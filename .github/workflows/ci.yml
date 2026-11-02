@@ -95,6 +95,28 @@ jobs:
             junit-${{ matrix.suite }}.xml
           retention-days: 14
 
+  schemas:
+    name: Schemas (Buf)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write # lets Buf summarise breaking changes on the pull request
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: bufbuild/buf-action@85aebf73123b5c15fd5528aaecbf9129cddf7fa7 # v1.6.0
+        with:
+          version: "1.75.0"
+          lint: true
+          format: true
+          breaking: ${{ github.event_name == 'pull_request' }}
+          breaking_against: ${{ github.event.repository.clone_url }}#format=git,branch=${{ github.base_ref }}
+          push: false
+          archive: false
+
   hooks:
     name: Other pre-commit hooks
     runs-on: ubuntu-24.04
@@ -115,12 +137,12 @@ jobs:
       - name: Run hooks not covered by the jobs above
         run: uv run --no-sync pre-commit run --all-files --show-diff-on-failure
         env:
-          SKIP: ruff-check,ruff-format,mypy,import-linter,dependency-policy,conventional-pre-commit
+          SKIP: ruff-check,ruff-format,mypy,import-linter,dependency-policy,buf-lint,buf-format,conventional-pre-commit
 
   ci-ok:
     name: CI passed
     if: always()
-    needs: [lint, typecheck, test, hooks]
+    needs: [lint, typecheck, test, schemas, hooks]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:

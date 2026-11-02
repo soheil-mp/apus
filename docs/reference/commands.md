@@ -23,6 +23,6 @@ All everyday tasks run through [just](https://just.systems/). Run `just` to list
 
 | Workflow | Trigger | Jobs |
 | :-- | :-- | :-- |
-| `CI` | Pushes to `main`, pull requests | Lint and import boundaries, strict type check, tests with coverage, other pre-commit hooks, and the aggregate `CI passed` check |
+| `CI` | Pushes to `main`, pull requests | Lint and import boundaries, strict type check, tests with coverage, Protobuf schemas (Buf lint, format and breaking-change detection on pull requests), other pre-commit hooks, and the aggregate `CI passed` check |
 | `Docs` | Changes to the docs, pull requests, weekly | Strict site build, internal link check, deployment to GitHub Pages, weekly external link check |
 | `Release Please` | Pushes to `main` | Keeps the release pull request and `CHANGELOG.md` current; tags releases |

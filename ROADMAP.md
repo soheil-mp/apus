@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 33 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12). **Open:** 816 h. With 15 % contingency, that is about 970 hours:
+**Done:** 36 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3). **Open:** 813 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -173,7 +173,7 @@ an API response, in Docker Compose and in CI.
   at constant speed, ideal sensor; frames to a UDP socket, ground truth to a file.
 - [ ] **M1.2** (5 h) Minimal edge: receive, assemble frames, treat any return in the sky as
   foreground, cluster by distance, nearest-neighbour tracking, publish tracks as Protobuf.
-- [ ] **M1.3** (3 h) First Protobuf schema (`TrackUpdate v1`) with `buf lint` in CI.
+- [x] **M1.3** (3 h) First Protobuf schema (`TrackUpdate v1`) with `buf lint` in CI.
 - [ ] **M1.4** (4 h) Compose profile `core`: NATS with JetStream, SeaweedFS (S3), PostgreSQL;
   health checks; configuration from `.env`.
 - [ ] **M1.5** (5 h) Landing consumer: pull from JetStream, write Parquet micro-batches, commit

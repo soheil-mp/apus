@@ -4,8 +4,8 @@
 #   pre-commit run --all-files
 #
 # Hooks that need the workspace environment (mypy, import-linter) run through
-# `uv run`, so run `just setup` (or `uv sync`) first. SQLFluff and Buf hooks are
-# added with the dbt project and the Protobuf schemas.
+# `uv run`, so run `just setup` (or `uv sync`) first. The SQLFluff hook is added
+# with the dbt project.
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [pre-commit]
 
@@ -121,3 +121,9 @@ repos:
         language: python
         additional_dependencies: ["cffconvert==2.0.0"]
         files: ^CITATION\.cff$
+
+  - repo: https://github.com/bufbuild/buf
+    rev: v1.75.0
+    hooks:
+      - id: buf-lint
+      - id: buf-format
