@@ -3,8 +3,9 @@
 # Run on everything:
 #   pre-commit run --all-files
 #
-# Language-specific hooks (ruff, mypy, sqlfluff, hadolint, actionlint, buf) are
-# added in milestone M0 of ROADMAP.md together with the code they check.
+# Hooks that need the workspace environment (mypy, import-linter) run through
+# `uv run`, so run `just setup` (or `uv sync`) first. SQLFluff and Buf hooks are
+# added with the dbt project and the Protobuf schemas.
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [pre-commit]
 
@@ -47,3 +48,57 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.13.6
+    hooks:
+      - id: uv-lock
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict)
+        entry: uv run --no-sync mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+      - id: import-linter
+        name: import boundaries (import-linter)
+        entry: uv run --no-sync lint-imports
+        language: system
+        types: [python]
+        pass_filenames: false
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+
+  - repo: https://github.com/AleksaC/hadolint-py
+    rev: v2.15.1
+    hooks:
+      - id: hadolint
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.39.0
+    hooks:
+      - id: check-github-workflows
+      - id: check-renovate

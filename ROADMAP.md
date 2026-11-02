@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 17 h (M0.1, M0.2, M0.3, M0.4, M0.11, M0.12). **Open:** 832 h. With 15 % contingency, that is about 970 hours:
+**Done:** 19 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.11, M0.12). **Open:** 830 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -131,7 +131,7 @@ released automatically.
   mypy (strict), pytest and coverage (branch coverage, fail under 85 %) configured.
 - [x] **M0.4** (2 h) `justfile` (`setup`, `lint`, `fmt`, `typecheck`, `test`, `docs`, `up`,
   `down`, `e2e`) and a devcontainer with the same tool versions.
-- [ ] **M0.5** (2 h) Extend pre-commit with Ruff, mypy, actionlint, hadolint, ShellCheck,
+- [x] **M0.5** (2 h) Extend pre-commit with Ruff, mypy, actionlint, hadolint, ShellCheck,
   yamllint, check-jsonschema and import-linter.
 - [ ] **M0.6** (5 h) GitHub Actions CI: lint, type check and test (matrix by package), uv
   cache, concurrency groups, read-only default permissions, actions pinned by commit SHA,
