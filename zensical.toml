@@ -23,6 +23,7 @@ nav = [
   { "Reference" = [
     { "Commands" = "reference/commands.md" },
     { "Environment variables" = "reference/environment.md" },
+    { "Coordinate frames" = "reference/coordinates.md" },
   ] },
   { "Explanation" = [
     { "Architecture" = "architecture.md" },
