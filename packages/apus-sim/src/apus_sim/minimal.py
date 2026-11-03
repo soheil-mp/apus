@@ -20,14 +20,16 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 from apus_core.coordinates import SensorPose, spherical_to_cartesian
+from apus_core.demo import DEMO_DEVICE_ID, DEMO_GEOMETRY, DEMO_POSE
 from apus_core.domain import Frame
-from apus_core.packets import SensorGeometry
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import TextIO
 
     import numpy.typing as npt
+
+    from apus_core.packets import SensorGeometry
 
 __all__ = [
     "DEFAULT_GEOMETRY",
@@ -38,13 +40,8 @@ __all__ = [
     "write_truth",
 ]
 
-DEFAULT_GEOMETRY = SensorGeometry.uniform(
-    rows=64, lowest_deg=5.0, highest_deg=45.0, cols_per_frame=1024, frame_rate_hz=10.0
-)
-"""A 64-beam sensor looking at the sky between 5 and 45 degrees elevation."""
-
-DEFAULT_POSE = SensorPose(position_m=(0.0, 0.0, 2.0))
-"""A level sensor 2 m above the site origin, its forward axis pointing east."""
+DEFAULT_GEOMETRY = DEMO_GEOMETRY
+DEFAULT_POSE = DEMO_POSE
 
 _BIRD_INTENSITY = 80.0
 
@@ -101,7 +98,7 @@ class StraightLineScenario:
     pose: SensorPose = DEFAULT_POSE
     geometry: SensorGeometry = DEFAULT_GEOMETRY
     start_time_ns: int = 1_777_593_600 * 1_000_000_000  # 2026-05-01T00:00:00Z
-    device_id: str = "lidar-1"
+    device_id: str = DEMO_DEVICE_ID
 
     @classmethod
     def from_seed(
