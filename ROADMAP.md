@@ -1,8 +1,9 @@
 # Roadmap
 
-> **Status (2026-11-02):** planning is complete: research, architecture and the first ten ADRs
-> are in [`docs/`](docs/), and every open item is mirrored as a GitHub issue. No product code
-> exists yet. The next item is **M0.3**.
+> **Status (2026-11-03):** M0 is complete. In M1, a minimal simulator and a minimal edge track
+> one synthetic bird over UDP (M1.1–M1.3, M1.10), on top of the core domain types, coordinate
+> frames and time model of M2. Every open item is mirrored as a GitHub issue. The next item is
+> **M1.4**.
 
 Apus is built in seven phases and 21 milestones. A thin end-to-end slice comes first (M1), and
 every later milestone deepens one stage of that slice, so the project works from early on and

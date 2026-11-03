@@ -90,6 +90,16 @@ just check   # lint, import boundaries, strict type check, tests with coverage
 just         # list every recipe
 ```
 
+Watch the walking skeleton track one simulated bird (two terminals):
+
+```sh
+uv run apus-edge run --listen 127.0.0.1:7502 --out tracks.pb
+uv run apus-sim straight-line --seed 7 --duration-s 30 --target 127.0.0.1:7502 --truth truth.jsonl
+```
+
+The simulator sends lidar datagrams over UDP and writes ground truth to `truth.jsonl`; the edge
+assembles frames, detects and tracks the bird, and writes `TrackUpdate` messages to `tracks.pb`.
+
 A devcontainer in `.devcontainer/` provides the same tools for VS Code or GitHub Codespaces.
 
 Coming with the walking skeleton (M1): `just up` starts the local platform with Docker Compose
@@ -115,11 +125,12 @@ described in [ADR-0010](docs/adr/0010-python-toolchain-monorepo.md).
 
 ## Status and plans
 
-- **Done:** domain research with verified references, live checks of every data source, tool
-  selection, ten ADRs, the target architecture and the roadmap.
-- **Next:** M0 (engineering foundations), then M1, a thin end-to-end slice from simulated
-  packets to an API response.
-- **Ahead:** 807 hours of planned work in 21 milestones, listed with estimates and exit criteria
+- **Done:** research, ten ADRs, the architecture and the roadmap; M0 engineering foundations;
+  core domain types, coordinate frames, the time model and the lidar packet format; a minimal
+  simulator and a minimal edge that tracks one straight-flying bird end to end over UDP.
+- **Next:** the rest of M1: the Compose stack (NATS, SeaweedFS, PostgreSQL), landing into
+  DuckLake, dbt and Dagster, the first API endpoint and `just e2e`.
+- **Ahead:** 787 hours of planned work in 21 milestones, listed with estimates and exit criteria
   in [ROADMAP.md](ROADMAP.md) and mirrored as [GitHub issues](https://github.com/soheil-mp/apus/issues).
 
 ## Data and attribution
