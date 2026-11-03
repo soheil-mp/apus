@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 42 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3, M2.2). **Open:** 807 h. With 15 % contingency, that is about 970 hours:
+**Done:** 47 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3, M2.1, M2.2). **Open:** 802 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -200,7 +200,7 @@ tutorial documents the slice. **Release v0.1.0.**
 
 **Goal:** shared types, coordinate systems and schemas that every package relies on.
 
-- [ ] **M2.1** (5 h) Core domain types: `Site`, `SensorPose`, `Frame` (range image and
+- [x] **M2.1** (5 h) Core domain types: `Site`, `SensorPose`, `Frame` (range image and
   per-point time), `Detection`, `TrackState`, `Track`, `Advisory`. Pydantic models at
   boundaries, NumPy structured arrays in hot paths.
 - [x] **M2.2** (6 h) Coordinate frames: sensor spherical, sensor Cartesian, local ENU at the
