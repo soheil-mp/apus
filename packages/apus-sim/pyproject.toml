@@ -1,6 +1,6 @@
 [project]
 name = "apus-sim"
-version = "0.0.0"
+version = "0.1.0"
 description = "Physics-based lidar, scene and bird simulator: the digital twin of a monitoring site."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"

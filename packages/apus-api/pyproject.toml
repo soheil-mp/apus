@@ -1,6 +1,6 @@
 [project]
 name = "apus-api"
-version = "0.0.0"
+version = "0.1.0"
 description = "Read-only HTTP API over the analysis-ready (gold) tables."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
