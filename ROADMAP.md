@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 47 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3, M2.1, M2.2). **Open:** 802 h. With 15 % contingency, that is about 970 hours:
+**Done:** 49 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3, M2.1, M2.2, M2.3). **Open:** 800 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -205,7 +205,7 @@ tutorial documents the slice. **Release v0.1.0.**
   boundaries, NumPy structured arrays in hot paths.
 - [x] **M2.2** (6 h) Coordinate frames: sensor spherical, sensor Cartesian, local ENU at the
   site, RD New (EPSG:28992) and WGS84 via pyproj; Hypothesis round-trip tests with error bounds.
-- [ ] **M2.3** (2 h) Time model: device monotonic clock versus UTC, clock-offset field,
+- [x] **M2.3** (2 h) Time model: device monotonic clock versus UTC, clock-offset field,
   per-point timestamps, written policy for clock skew.
 - [ ] **M2.4** (2 h) Units and naming conventions: SI units in storage, unit suffixes in column
   names (for example `speed_mps`, `height_agl_m`).

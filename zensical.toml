@@ -25,6 +25,7 @@ nav = [
     { "Environment variables" = "reference/environment.md" },
     { "Coordinate frames" = "reference/coordinates.md" },
     { "Domain types" = "reference/domain.md" },
+    { "Time model" = "reference/time.md" },
   ] },
   { "Explanation" = [
     { "Architecture" = "architecture.md" },
