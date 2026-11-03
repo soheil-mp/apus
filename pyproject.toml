@@ -1,6 +1,6 @@
 [project]
 name = "apus"
-version = "0.0.0"
+version = "0.1.0"
 description = "Lidar-based bird-flight monitoring: deterministic perception on a production-grade data platform."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
