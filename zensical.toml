@@ -26,6 +26,7 @@ nav = [
     { "Coordinate frames" = "reference/coordinates.md" },
     { "Domain types" = "reference/domain.md" },
     { "Time model" = "reference/time.md" },
+    { "Lidar packet format" = "reference/packets.md" },
   ] },
   { "Explanation" = [
     { "Architecture" = "architecture.md" },
