@@ -12,7 +12,8 @@ import pytest
 
 from apus_core.packets import decode
 from apus_sim.cli import main, parse_address, run_straight_line
-from apus_sim.minimal import StraightLineBird, StraightLineScenario, write_truth
+from apus_sim.minimal import StraightLineBird, StraightLineScenario
+from apus_sim.truth import write_truth
 
 if TYPE_CHECKING:
     from pathlib import Path

@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 59 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.1, M1.2, M1.3, M2.1, M2.2, M2.3). **Open:** 790 h. With 15 % contingency, that is about 970 hours:
+**Done:** 62 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.1, M1.2, M1.3, M1.10, M2.1, M2.2, M2.3). **Open:** 787 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -186,7 +186,7 @@ an API response, in Docker Compose and in CI.
 - [ ] **M1.9** (5 h) End-to-end test `just e2e`: start the stack, run a 30-second seeded
   scenario, assert the track count and the bird's speed match ground truth within tolerance;
   runs in CI.
-- [ ] **M1.10** (3 h) import-linter contracts: the edge package cannot import the ground-truth
+- [x] **M1.10** (3 h) import-linter contracts: the edge package cannot import the ground-truth
   module or the pipelines ([ADR-0003](docs/adr/0003-radar-driven-synthetic-lidar.md)).
 
 **Exit criteria:** `just e2e` passes locally and in CI in under 10 minutes; a "first run"

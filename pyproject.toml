@@ -191,3 +191,38 @@ name = "Platform services do not depend on the simulator"
 type = "forbidden"
 source_modules = ["apus_api", "apus_ingest"]
 forbidden_modules = ["apus_sim"]
+
+# ADR-0003: ground truth is for tests and evaluation only. No product package may read it,
+# directly or through another module.
+[[tool.importlinter.contracts]]
+name = "Only tests and evaluation read the simulator's ground truth"
+type = "forbidden"
+source_modules = ["apus_api", "apus_core", "apus_edge", "apus_ingest", "apus_pipelines"]
+forbidden_modules = ["apus_sim.truth"]
+
+# Within the simulator, the sensor physics must not depend on the truth channel: a frame is
+# computed from the scene alone, and truth is recorded next to it.
+[[tool.importlinter.contracts]]
+name = "The truth channel is a leaf of the simulator"
+type = "forbidden"
+source_modules = ["apus_sim.truth"]
+forbidden_modules = ["apus_core", "apus_sim.minimal", "apus_sim.cli"]
+
+# Generated Protobuf code is wrapped by apus_core.messages; other packages use the wrapper.
+[[tool.importlinter.contracts]]
+name = "Generated Protobuf code is used only through apus_core.messages"
+type = "forbidden"
+source_modules = ["apus_api", "apus_edge", "apus_ingest", "apus_pipelines", "apus_sim"]
+forbidden_modules = ["apus_core.gen"]
+allow_indirect_imports = true
+
+# The edge runtime is layered: entry points use the pipeline, the pipeline uses the stages,
+# and the stages (assembly, detection, tracking) are independent of each other.
+[[tool.importlinter.contracts]]
+name = "Edge stages are layered and independent"
+type = "layers"
+layers = [
+  "apus_edge.cli",
+  "apus_edge.pipeline",
+  "apus_edge.assembler | apus_edge.detection | apus_edge.tracking",
+]

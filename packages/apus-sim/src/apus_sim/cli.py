@@ -15,7 +15,8 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from apus_core.packets import encode_frame
-from apus_sim.minimal import StraightLineScenario, write_truth
+from apus_sim.minimal import StraightLineScenario
+from apus_sim.truth import write_truth
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

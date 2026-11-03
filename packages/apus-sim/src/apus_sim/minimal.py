@@ -12,9 +12,8 @@ The simulator produces two streams that never mix (ADR-0003):
 
 from __future__ import annotations
 
-import json
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 import numpy as np
@@ -22,10 +21,10 @@ import numpy as np
 from apus_core.coordinates import SensorPose, spherical_to_cartesian
 from apus_core.demo import DEMO_DEVICE_ID, DEMO_GEOMETRY, DEMO_POSE
 from apus_core.domain import Frame
+from apus_sim.truth import BirdTruth
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-    from typing import TextIO
 
     import numpy.typing as npt
 
@@ -34,10 +33,8 @@ if TYPE_CHECKING:
 __all__ = [
     "DEFAULT_GEOMETRY",
     "DEFAULT_POSE",
-    "BirdTruth",
     "StraightLineBird",
     "StraightLineScenario",
-    "write_truth",
 ]
 
 DEFAULT_GEOMETRY = DEMO_GEOMETRY
@@ -65,21 +62,6 @@ class StraightLineBird:
         t = np.asarray(t_s, dtype=np.float64)[..., np.newaxis]
         start = np.asarray(self.start_m, dtype=np.float64)
         return start + t * np.asarray(self.velocity_mps, dtype=np.float64)
-
-
-@dataclass(frozen=True)
-class BirdTruth:
-    """The bird's true state at the start of one frame."""
-
-    frame_id: int
-    time_ns: int
-    east_m: float
-    north_m: float
-    up_m: float
-    velocity_east_mps: float
-    velocity_north_mps: float
-    velocity_up_mps: float
-    radius_m: float
 
 
 @dataclass(frozen=True)
@@ -190,12 +172,3 @@ def _ray_sphere(
     hit = (half_chord_sq >= 0) & (along > 0)
     distance = along - np.sqrt(np.where(hit, half_chord_sq, 0.0))
     return np.where(hit & (distance > 0), distance, np.nan)
-
-
-def write_truth(records: Iterator[BirdTruth] | list[BirdTruth], stream: TextIO) -> int:
-    """Write ground-truth records as JSON Lines; returns the number written."""
-    count = 0
-    for record in records:
-        stream.write(json.dumps(asdict(record), separators=(",", ":")) + "\n")
-        count += 1
-    return count
