@@ -47,7 +47,7 @@ gets better with each step.
 | | [M20 Documentation, write-up and 1.0](#m20--documentation-write-up-and-10-release) | 30 | v1.0.0 |
 | | **Total** | **849** | |
 
-**Done:** 49 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.3, M2.1, M2.2, M2.3). **Open:** 800 h. With 15 % contingency, that is about 970 hours:
+**Done:** 54 h (M0.1, M0.2, M0.3, M0.4, M0.5, M0.6, M0.7, M0.8, M0.9, M0.10, M0.11, M0.12, M1.1, M1.3, M2.1, M2.2, M2.3). **Open:** 795 h. With 15 % contingency, that is about 970 hours:
 roughly nine months at 25 hours a week.
 
 ### Indicative schedule
@@ -169,7 +169,7 @@ works on a fresh clone.
 **Goal:** one straight-flying synthetic bird travels from simulated packets to a gold table and
 an API response, in Docker Compose and in CI.
 
-- [ ] **M1.1** (5 h) Minimal simulator: one sensor pose, empty sky, one bird on a straight line
+- [x] **M1.1** (5 h) Minimal simulator: one sensor pose, empty sky, one bird on a straight line
   at constant speed, ideal sensor; frames to a UDP socket, ground truth to a file.
 - [ ] **M1.2** (5 h) Minimal edge: receive, assemble frames, treat any return in the sky as
   foreground, cluster by distance, nearest-neighbour tracking, publish tracks as Protobuf.

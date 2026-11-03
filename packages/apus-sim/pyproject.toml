@@ -8,6 +8,9 @@ license = "MIT"
 authors = [{ name = "Soheil Mohammadpour" }]
 dependencies = ["apus-core"]
 
+[project.scripts]
+apus-sim = "apus_sim.cli:main"
+
 [build-system]
 requires = ["uv_build>=0.11,<0.14"]
 build-backend = "uv_build"
