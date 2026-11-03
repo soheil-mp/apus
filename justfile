@@ -42,6 +42,10 @@ hooks:
 # Everything CI checks, in the same order
 check: lint typecheck test
 
+# Regenerate Python code from the Protobuf schemas (add --check to only verify it)
+proto-gen *args:
+    uv run python scripts/gen_proto.py {{ args }}
+
 # Serve the documentation site locally with live reload
 docs:
     uv run --group docs zensical serve

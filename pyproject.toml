@@ -17,6 +17,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+  "grpcio-tools>=1.85",
   "hypothesis>=6.170",
   "import-linter>=2.15",
   "mypy>=2.4",
@@ -46,6 +47,7 @@ apus-sim = { workspace = true }
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+extend-exclude = ["packages/apus-core/src/apus_core/gen"]
 src = [
   "packages/apus-api/src",
   "packages/apus-core/src",
@@ -124,6 +126,8 @@ warn_unreachable = true
 enable_error_code = ["ignore-without-code", "possibly-undefined", "redundant-expr", "truthy-bool"]
 files = ["packages", "tests", "scripts"]
 explicit_package_bases = true
+# Generated Protobuf code: mypy reads the generated .pyi stubs, but does not judge them.
+exclude = ['^packages/apus-core/src/apus_core/gen/.*\.py$']
 mypy_path = [
   "packages/apus-api/src",
   "packages/apus-core/src",
@@ -132,6 +136,14 @@ mypy_path = [
   "packages/apus-pipelines/src",
   "packages/apus-sim/src",
 ]
+
+[[tool.mypy.overrides]]
+module = ["apus_core.gen.*"]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["grpc_tools", "grpc_tools.*"]  # code generator without type information
+ignore_missing_imports = true
 
 # --- pytest and coverage ----------------------------------------------------------------
 [tool.pytest.ini_options]
@@ -149,6 +161,7 @@ markers = [
 
 [tool.coverage.run]
 branch = true
+omit = ["*/apus_core/gen/*"]
 source_pkgs = ["apus_api", "apus_core", "apus_edge", "apus_ingest", "apus_pipelines", "apus_sim"]
 
 [tool.coverage.report]

@@ -29,3 +29,15 @@ buf breaking --against '.git#branch=main'
 ```
 
 The same checks run in CI and in pre-commit.
+
+## Generated Python code
+
+Python classes are generated into `packages/apus-core/src/apus_core/gen/` and committed, so the
+packages install without a Protobuf compiler. After changing a schema, run:
+
+```sh
+just proto-gen          # regenerate with the protoc bundled in grpcio-tools
+just proto-gen --check  # fail if the committed code is out of date (pre-commit, CI)
+```
+
+Use the conversions in `apus_core.messages` rather than building messages by hand.

@@ -46,6 +46,7 @@ ALIASES = {
     "apache-2.0": "Apache-2.0",
     "bsd": "BSD",
     "bsd 2-clause license": "BSD-2-Clause",
+    "3-clause bsd license": "BSD-3-Clause",
     "bsd 3-clause license": "BSD-3-Clause",
     "bsd license": "BSD",
     "isc license (iscl)": "ISC",

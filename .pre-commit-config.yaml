@@ -8,6 +8,8 @@
 # with the dbt project.
 default_install_hook_types: [pre-commit, commit-msg]
 default_stages: [pre-commit]
+# Generated Protobuf code is checked by `scripts/gen_proto.py --check`, not reformatted.
+exclude: ^packages/apus-core/src/apus_core/gen/
 
 repos:
   - repo: https://github.com/gitleaks/gitleaks
@@ -75,6 +77,12 @@ repos:
         entry: uv run --no-sync lint-imports
         language: system
         types: [python]
+        pass_filenames: false
+      - id: proto-gen
+        name: generated Protobuf code is current
+        entry: uv run --no-sync python scripts/gen_proto.py --check
+        language: system
+        files: ^(proto/.*\.proto|scripts/gen_proto\.py|uv\.lock)$
         pass_filenames: false
       - id: dependency-policy
         name: dependency licences and scope

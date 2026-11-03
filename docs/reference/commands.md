@@ -12,6 +12,7 @@ All everyday tasks run through [just](https://just.systems/). Run `just` to list
 | `just typecheck` | mypy in strict mode |
 | `just test [args]` | pytest with coverage; extra arguments go to pytest |
 | `just hooks` | Every pre-commit hook on every file |
+| `just proto-gen [--check]` | Regenerate the Python code for the Protobuf schemas, or check that it is current |
 | `just docs` | Serve this documentation site locally with live reload |
 | `just docs-build` | Build the site in strict mode into `site/` |
 | `just roadmap-sync [--apply] [--update]` | Mirror `ROADMAP.md` into GitHub milestones and issues |
